@@ -21,30 +21,46 @@ public class ArrayLog<T> implements EnhancedLogInterface<T>
         // cannot create a generic array object, so has to be cast
         // from an Object back into the generic in order to compile
         this.log = (T[])new Object[4];
+        this.name = name;
+        size = 0;
     }
 
     // Returns the name of this StringLog.
     public String getName()
     {
-        return "";
+        return name;
     }
 
     // Returns the logical size of this StringLog.
     public int size()
     {
-        return -1;
+        return size;
     }
     
     // Returns true if this list contains no elements.
     public boolean isEmpty()
     {
-        return false;
+            for(int i = 0; i < log.length; i++)
+            {
+                if(log[i] != null)
+                {
+                    return false;
+                }
+            }
+        return true;
     }
     
     // Returns true if this list is completely full.
     public boolean isFull()
     {
-        return false;
+            for(int i = 0; i < log.length; i++)
+            {
+                if(log[i] == null)
+                {
+                    return false;
+                }
+            }
+        return true;
     }
 
     // Appends the specified element to the end of this list.
@@ -92,6 +108,27 @@ public class ArrayLog<T> implements EnhancedLogInterface<T>
     // Inserts the specified element at the specified position in this list.
     public void add(int index, T element)
     {
+        if(isFull())
+        {
+            doubleLength();
+        }
+         T[] tempArray =  (T[])new Object[size +1];
+         for(int i = 0; i < index; i ++)
+         {
+            tempArray[i] = log[i];
+         }
+         tempArray[index] = element;
+         size++;
+         for(int j = (index+1) ; j < log.length; j++)
+         {
+            tempArray[j] = log[j];
+         }
+
+         for(int c = 0; c < size; c++)
+         {
+            log[c] = tempArray[c];
+         }
+
     }
     
     // Removes the element at the specified position in this list, and
@@ -114,4 +151,30 @@ public class ArrayLog<T> implements EnhancedLogInterface<T>
     public void clear()
     {
     }
+
+    public void doubleLength()
+    {
+        int length = this.log.length;
+        T[] newLog = (T[])new Object[2*length];
+        for(int i = 0; i < log.length; i++)
+        {
+            newLog[i] = log[i];
+        }
+
+        log = newLog;
+
+    }
+    public void halfLength()
+    {
+        int length = this.log.length;
+        T[] newLog = (T[])new Object[length/2];
+        for(int i = 0; i < log.length; i++)
+        {
+            newLog[i] = log[i];
+        }
+
+        log = newLog;
+
+    }
+
 }
