@@ -40,51 +40,66 @@ public class ArrayLog<T> implements EnhancedLogInterface<T>
     // Returns true if this list contains no elements.
     public boolean isEmpty()
     {
-            for(int i = 0; i < log.length; i++)
-            {
-                if(log[i] != null)
-                {
-                    return false;
-                }
-            }
-        return true;
+        if(size==0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     
     // Returns true if this list is completely full.
     public boolean isFull()
     {
-            for(int i = 0; i < log.length; i++)
-            {
-                if(log[i] == null)
-                {
-                    return false;
-                }
-            }
-        return true;
+        if(size == log.length)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+        
     }
 
     // Appends the specified element to the end of this list.
     public void add(T element)
     {
+        if(size==log.length)
+        {
+            doubleLength();
+        }
+        log[size] = element;
+        size++;
+        
     }
   
     // Returns the element at the specified position in this list.
     public T get(int index)
     {   
-        return null;
+        return log[index];
     }
     
     // Returns the index of the first occurance of the specified element
     // in this list, or -1 if this list does not contain the element.
     public int indexOf(T element)
     {
+        for(int i = 0; i < size; i++)
+        {
+            if(log[i].equals(element))
+            {
+                return i;
+            }
+        }
         return -1;
     }
     
     // Returns true if this list contains the specified element.
     public boolean contains(T element)
     {
-        return false;
+        return indexOf(element) != -1;
     }
     
     // Returns a formatted string representation of this StringLog.
@@ -102,26 +117,28 @@ public class ArrayLog<T> implements EnhancedLogInterface<T>
     // with the specified element.  Returns what was at that location
     public T set(int index, T element)
     {
-        return null;
+        T old = log[index];
+        log[index] = element;
+        return old;
     }
     
     // Inserts the specified element at the specified position in this list.
     public void add(int index, T element)
     {
-        if(isFull())
+        if(log.length==size)
         {
             doubleLength();
         }
-         T[] tempArray =  (T[])new Object[size +1];
+        size++;
+         T[] tempArray =  (T[])new Object[size];
          for(int i = 0; i < index; i ++)
          {
             tempArray[i] = log[i];
          }
          tempArray[index] = element;
-         size++;
-         for(int j = (index+1) ; j < log.length; j++)
+         for(int j = index ; j < size-1; j++)
          {
-            tempArray[j] = log[j];
+            tempArray[j+1] = log[j];
          }
 
          for(int c = 0; c < size; c++)
@@ -136,7 +153,31 @@ public class ArrayLog<T> implements EnhancedLogInterface<T>
     // are set to null.
     public T remove(int index)
     {
-        return null;
+        if(index < 0 || index > log.length)
+        {
+            throw new IndexOutOfBoundsException("Index " + index + " Size " + size);
+        }
+         T[] tempArray =  (T[])new Object[size - 1];
+         T temp = log[index];
+         for(int i = 0; i < index; i++)
+        {
+            tempArray[i] = log[i];
+         }
+         for(int j = index; j < log.length; j++)
+         {
+            tempArray[j] = log[j+1];
+         }
+         for(int c = 0; c < size; c++)
+         {
+            log[c] = tempArray[c];
+         }
+         size--;
+         if(size == log.length/4)
+        {
+            halfLength();
+        }
+         return temp;
+
     }
     
     // Removes the first occurance of the specified element from this
@@ -144,17 +185,27 @@ public class ArrayLog<T> implements EnhancedLogInterface<T>
     // removed), false otherwise.
     public boolean remove(T element)
     {
+        if(indexOf(element) != -1)
+        {
+            remove(indexOf(element));
+            return true;
+        }
         return false;
     }
     
     // Removes all of the elements from this list.
     public void clear()
     {
+        for(int i = 0; i < size; i++)
+        {
+            log[i] = null;
+        }
+        size = 0;
     }
 
     public void doubleLength()
     {
-        int length = this.log.length;
+        int length = log.length;
         T[] newLog = (T[])new Object[2*length];
         for(int i = 0; i < log.length; i++)
         {
