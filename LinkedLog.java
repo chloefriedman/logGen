@@ -14,24 +14,27 @@ public class LinkedLog<T> implements EnhancedLogInterface<T>
 
     public LinkedLog(String name)
     {
+        this.name = name;
+        size = 0;
+        log = new LLNode<T>(null);
     }
     
     // returns the name of this StringLog
     public String getName()
     {
-        return "";
+        return name;
     }
 
     // returns the logical size of this StringLog
     public int size()
     {
-        return -1;
+        return size;
     }
     
     // returns true if this list contains no elements
     public boolean isEmpty()
     {
-        return false;
+        return(size == 0);
     }
     
     // returns true if this list is completely full

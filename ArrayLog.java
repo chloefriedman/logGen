@@ -153,26 +153,30 @@ public class ArrayLog<T> implements EnhancedLogInterface<T>
     // are set to null.
     public T remove(int index)
     {
-        if(index < 0 || index > log.length)
+        if(index < 0 || index >=size)
         {
             throw new IndexOutOfBoundsException("Index " + index + " Size " + size);
         }
          T[] tempArray =  (T[])new Object[size - 1];
          T temp = log[index];
+        
+         
+        
          for(int i = 0; i < index; i++)
         {
             tempArray[i] = log[i];
          }
-         for(int j = index; j < log.length; j++)
+         for(int j = index; j < size-1; j++)
          {
             tempArray[j] = log[j+1];
          }
-         for(int c = 0; c < size; c++)
+         for(int c = 0; c < size-1; c++)
          {
             log[c] = tempArray[c];
          }
+        log[size-1] = null;
          size--;
-         if(size == log.length/4)
+         if(size == log.length/4 && log.length > 4)
         {
             halfLength();
         }
@@ -219,7 +223,7 @@ public class ArrayLog<T> implements EnhancedLogInterface<T>
     {
         int length = this.log.length;
         T[] newLog = (T[])new Object[length/2];
-        for(int i = 0; i < log.length; i++)
+        for(int i = 0; i < newLog.length; i++)
         {
             newLog[i] = log[i];
         }
