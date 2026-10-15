@@ -16,7 +16,7 @@ public class LinkedLog<T> implements EnhancedLogInterface<T>
     {
         this.name = name;
         size = 0;
-        log = new LLNode<T>(null);
+        log = null;
     }
     
     // returns the name of this StringLog
@@ -40,31 +40,90 @@ public class LinkedLog<T> implements EnhancedLogInterface<T>
     // returns true if this list is completely full
     public boolean isFull()
     {
-        return true;
+        return false;
     }
 
     // appends the specified element to the end of this list
     public void add(T element)
     {
+        LLNode<T> toAdd = new LLNode<>(element);
+        if(log == null)
+        {
+            log = new LLNode<T>(element);;
+        }
+        
+        else
+        {
+            LLNode<T> temp = log;
+            while(temp.getLink() != null)
+            {
+             temp = temp.getLink();
+            }
+            temp.setLink(toAdd);
+        }
+        size++;
     }
   
     // returns the element at the specified position in this list
     public T get(int index)
     {
-        return null;
+        if(index > size || index < 0)
+        {
+            throw new IndexOutOfBoundsException("Index not in range");
+        }
+        else
+        {
+            int current = 0;
+            LLNode<T> temp = log;
+            while(current != index)
+            {
+                temp = temp.getLink();
+                current++;
+            }
+            return temp.getInfo();
+        }
+        
     }
     
     // returns the index of the first occurance of the specified element
     // in this list, or -1 if this list does not contain the element
     public int indexOf(T element)
     {
+        if(size == 0)
+        {
+            return -1;
+        }
+        else
+        {
+            int index = 0;
+            LLNode<T> temp = log;
+            while(index < size)
+            {
+                if(temp.getInfo() == element)
+                {
+                    return index;
+                }
+                else
+                {
+                    index ++;
+                    temp = temp.getLink();
+                }
+            }
+        }
         return -1;
     }
     
     // returns true if this list contains the specified element
     public boolean contains(T element)
     {
-        return false;
+        if(indexOf(element) == -1)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
     }
     
     // returns a formatted string representation of this StringLog
@@ -87,12 +146,38 @@ public class LinkedLog<T> implements EnhancedLogInterface<T>
     // with the specified element
     public T set(int index, T element)
     {
-        return null;
+        if(index >= size || index < 0)
+        {
+            throw new IndexOutOfBoundsException("Index is not in bound of list");
+        }
+        else if(log == null)
+        {
+            throw new NullPointerException("List is not initialized");
+        }
+        else
+        {
+            LLNode<T> temp = log;
+            for(int i = 0; i < index; i++)
+            {
+                temp = temp.getLink();
+            }
+            T a = temp.getInfo();
+            temp.setInfo(element);
+            return a;
+        }
     }
     
     // inserts the specified element at the specified position in this list
     public void add(int index, T element)
-    {
+    {   
+        if(index > size || index < 0)
+        {
+            throw new IndexOutOfBoundsException("Index to add is not valid");
+        }
+        else if(index == 0)
+        {
+            LLNode<T> temp = 
+        }
     }
     
     // removes the element at the specified position in this list
