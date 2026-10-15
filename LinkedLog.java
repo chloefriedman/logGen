@@ -176,7 +176,30 @@ public class LinkedLog<T> implements EnhancedLogInterface<T>
         }
         else if(index == 0)
         {
-            LLNode<T> temp = 
+            LLNode<T> toAdd = new LLNode<T>(element);
+            toAdd.setLink(log);
+            log = toAdd;
+        }
+        else if (index == size)
+        {
+            LLNode<T> temp = log;
+            for(int i = 0; i < size; i++)
+            {
+                temp = temp.getLink();
+            }
+            LLNode<T> toAdd = new LLNode<T>(element);
+            temp.setLink(element);
+        }
+        else
+        {
+            LLNode<T> temp = log;
+            for(int i = 0; i < index-1; i++)
+            {
+                temp = temp.getLink();
+            }
+            LLNode<T> toAdd = new LLNode<T>(element);
+            element.setLink(temp.getLink());
+            temp.setLink(toAdd);
         }
     }
     
