@@ -206,18 +206,78 @@ public class LinkedLog<T> implements EnhancedLogInterface<T>
     // removes the element at the specified position in this list
     public T remove(int index)
     {
-        return null;
+        if(index >= size || index < 0)
+        {
+            throw new IndexOutOfBoundsException("Index to add is not valid");
+        }
+        else if(size == 0)
+        {
+            throw new NullPointerException("No elements in list");
+        }
+        else if(index == 0)
+        {
+            if(size == 1)
+            {
+                LLNode<T> toRemove = log;
+                log = null;
+                return toRemove;
+            }
+            else
+            {
+                LLNode<T> toRemove = log;
+                LLNode<T> second = log.getLink();
+                log.setLink(null);
+                log = second;
+                return toRemove;
+            }
+            size--;
+        }
+        else if(index = size - 1)
+        {
+            LLNode<T> temp = log;
+            for(int i = 0; i < size - 2; i++)
+            {
+                temp = temp.getLink();
+            }
+            LLNode<T> toRemove = temp.getLink();
+            temp.setLink(null);
+            size--;
+            return toRemove;
+        }
+        else
+        {
+            LLNode<T> temp = log;
+            for(int i = 0; i < index - 1; i++) //one before index to remove
+            {
+                temp = temp.getLink();
+            }
+            LLNode<T> toRemove = temp.getLink();
+            temp.setLink(toRemove.getLink());
+            toRemove.setLink(null);
+            size--;
+            return toRemove;
+        }
     }
     
     // removes the first occurance of the specified element from this
     // list, if it is present
     public boolean remove(T element)
     {
-        return false;
+        int index = indexOf(element);
+        if(index == -1)
+        {
+            return false;
+        }
+        else
+        {
+            remove(index);
+            return true;
+        }
     }
         
     // removes all of the elements from this list
     public void clear()
     {
+        log = null;
     }
 }
