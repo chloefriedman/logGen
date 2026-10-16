@@ -169,10 +169,14 @@ public class LinkedLog<T> implements EnhancedLogInterface<T>
     
     // inserts the specified element at the specified position in this list
     public void add(int index, T element)
-    {   
+    {
         if(index > size || index < 0)
         {
             throw new IndexOutOfBoundsException("Index to add is not valid");
+        }
+        else if(log == null)
+        {
+            log = new LLNode<T>(element);
         }
         else if(index == 0)
         {
@@ -188,7 +192,7 @@ public class LinkedLog<T> implements EnhancedLogInterface<T>
                 temp = temp.getLink();
             }
             LLNode<T> toAdd = new LLNode<T>(element);
-            temp.setLink(element);
+            temp.setLink(toAdd);
         }
         else
         {
@@ -198,9 +202,10 @@ public class LinkedLog<T> implements EnhancedLogInterface<T>
                 temp = temp.getLink();
             }
             LLNode<T> toAdd = new LLNode<T>(element);
-            element.setLink(temp.getLink());
+            toAdd.setLink(temp.getLink());
             temp.setLink(toAdd);
         }
+        size++;
     }
     
     // removes the element at the specified position in this list
@@ -220,7 +225,8 @@ public class LinkedLog<T> implements EnhancedLogInterface<T>
             {
                 LLNode<T> toRemove = log;
                 log = null;
-                return toRemove;
+                size--;
+                return toRemove.getInfo();
             }
             else
             {
@@ -228,11 +234,10 @@ public class LinkedLog<T> implements EnhancedLogInterface<T>
                 LLNode<T> second = log.getLink();
                 log.setLink(null);
                 log = second;
-                return toRemove;
-            }
-            size--;
-        }
-        else if(index = size - 1)
+                size--;
+                return toRemove.getInfo();
+            }        }
+        else if(index == size - 1)
         {
             LLNode<T> temp = log;
             for(int i = 0; i < size - 2; i++)
@@ -242,7 +247,7 @@ public class LinkedLog<T> implements EnhancedLogInterface<T>
             LLNode<T> toRemove = temp.getLink();
             temp.setLink(null);
             size--;
-            return toRemove;
+            return toRemove.getInfo();
         }
         else
         {
@@ -255,7 +260,7 @@ public class LinkedLog<T> implements EnhancedLogInterface<T>
             temp.setLink(toRemove.getLink());
             toRemove.setLink(null);
             size--;
-            return toRemove;
+            return toRemove.getInfo();
         }
     }
     
@@ -279,5 +284,6 @@ public class LinkedLog<T> implements EnhancedLogInterface<T>
     public void clear()
     {
         log = null;
+        size = 0;
     }
 }
